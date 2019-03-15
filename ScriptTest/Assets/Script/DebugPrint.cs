@@ -10,6 +10,7 @@
 *************************************************************/
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace isletspace
@@ -23,23 +24,28 @@ namespace isletspace
         private static Action<object> printer = UnityPrinter;
 
         #region basePrint
-        public static void p(object str)
+        public static void p(object obj)
         {
-            if (str == null)
-            {
-                str = "null";
-            }
-            printer(str);
+            if (obj == null)
+                obj = "null";
+            printer(obj);
         }
 
         public static void pp(object obj)
         {
-            
+            var str = (obj == null) ? "null" : obj.ToString();
+            var type = obj.GetType();
+            printer(str);
         }
 
-        public static void pl()
+        public static void pl<T>(T[] list)
         {
-
+            printer("========================= print list.  len: " + list.Length);
+            for (int i = 0; i < list.Length; ++i)
+            {
+                printer("    >> for  " + i + " : " + list[i].ToString());
+            }
+            printer("========================= end ");
         }
         #endregion
 

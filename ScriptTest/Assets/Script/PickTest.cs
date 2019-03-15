@@ -20,13 +20,12 @@ namespace isletspace
     /// </summary>
     public class PickTest : MonoBehaviour
     {
-        public GameObject testing;
+        public ITestScript script;
 
         public void DoTest()
         {
-            var test = testing.GetComponent<ITestScript>();
-            if (test != null)
-                test.StartTest();
+            if (script != null)
+                script.StartTest();
             else
                 DebugPrint.p("  ！！！ No Test Find ！！！  ");
         }
