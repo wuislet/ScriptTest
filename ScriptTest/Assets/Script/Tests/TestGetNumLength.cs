@@ -21,16 +21,64 @@ namespace isletspace
     /// </summary>
     public class TestGetNumLength : MonoBehaviour, ITestScript
     {
+        private static int[] digits = new[] { 0, 9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999 };
+        public int BinarySearch(int[] list, int num)
+        {
+            int left = 0;
+            int right = list.Length - 1;
+            while (left < right)
+            {
+                var mid = (left + right) >> 1;
+                if (list[mid] == num)
+                    return mid;
+
+                if (num > list[mid])
+                    left = mid + 1;
+                else
+                    right = mid;
+            }
+            return left;
+        }
+
+        public int Test(int num)
+        {
+            int digit = 1;
+            for (int i = 0; i < 20; ++i)
+            {
+                if (num <= digit)
+                {
+                    return i;
+                }
+
+                digit *= 10;
+            }
+            return 0;
+        }
+
         public void StartTest()
         {
-            int time = 10000000;
+            int time = 1000;
             List<int> tmp = new List<int>();
             DebugPrint.p(" >>> GetNumLength <<< ");
+            
             Stopwatch sw = new Stopwatch();
+            DebugPrint.p(" > table < ");
             sw.Start();
             for (int i = 0; i < time; ++i)
             {
-                var l = GetLengthWithString(i);
+                var l = Test(i);
+                tmp.Add(l);
+                DebugPrint.p("   =>   " + i + "  :  " + l);
+            }
+            sw.Stop();
+            DebugPrint.p(" > table < ");
+            DebugPrint.p("     > table <  Time:   " + sw.Elapsed.TotalSeconds);
+
+            sw.Reset();
+            sw.Start();
+            for (int i = 0; i < time; ++i)
+            {
+                var l = GetLengthWithString(i + time);
                 tmp.Add(l);
             }
             sw.Stop();
@@ -40,7 +88,7 @@ namespace isletspace
             sw.Start();
             for (int i = 0; i < time; ++i)
             {
-                var l = GetLengthWithMath(i);
+                var l = GetLengthWithMath(i + time);
                 tmp.Add(l);
             }
             sw.Stop();
@@ -50,7 +98,17 @@ namespace isletspace
             sw.Start();
             for (int i = 0; i < time; ++i)
             {
-                var l = X2Math.GetIntLength2(i);
+                var l = GetLengthByFor(i + time);
+                tmp.Add(l);
+            }
+            sw.Stop();
+            DebugPrint.p("     for power :   " + sw.Elapsed.TotalSeconds);
+
+            sw.Reset();
+            sw.Start();
+            for (int i = 0; i < time; ++i)
+            {
+                var l = X2Math.GetIntLength2(i + time);
                 tmp.Add(l);
             }
             sw.Stop();
@@ -99,6 +157,23 @@ namespace isletspace
             if (num < 1)
                 return 0;
             return (int)Mathf.Pow(10, (int)Mathf.Log10(num - 1));
+        }
+
+        public int GetLengthByFor(int num)
+        {
+            if (num < 1)
+                return 0;
+            int number = 1;
+            for (int i = 0; i < 20; ++i)
+            {
+                if (num < number)
+                {
+                    return i;
+                }
+                number *= 10;
+            }
+
+            return number;
         }
 
         public int GetLengthWithFastPowMath(int num)
@@ -159,7 +234,7 @@ namespace isletspace
 public static class X2Math
 {
     /// <summary>
-    /// »ñÈ¡Êı×ÖÎ»Êı
+    /// è·å–æ•°å­—ä½æ•°
     /// </summary>
     /// <param name="num"></param>
     /// <returns></returns>
@@ -175,7 +250,7 @@ public static class X2Math
     }
 
     /// <summary>
-    /// »ñÈ¡Êı×ÖÎ»Êı£¬¸ÕºÃÕûµÄÉÙÊıÒ»Î»¡£Èç£º10°´1Î»£¬100°´2Î»£¬1000°´3Î»Ëã¡£
+    /// è·å–æ•°å­—ä½æ•°ï¼Œåˆšå¥½æ•´çš„å°‘æ•°ä¸€ä½ã€‚å¦‚ï¼š10æŒ‰1ä½ï¼Œ100æŒ‰2ä½ï¼Œ1000æŒ‰3ä½ç®—ã€‚
     /// </summary>
     /// <param name="num"></param>
     /// <returns></returns>
